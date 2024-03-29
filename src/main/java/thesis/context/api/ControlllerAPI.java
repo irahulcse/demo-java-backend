@@ -4,8 +4,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import thesis.context.controller.Consumer;
 import thesis.context.data.PointCloud;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 @RestController
+@CrossOrigin(origins = "*")
 public class ControlllerAPI {
     //api to call the consumer class
 

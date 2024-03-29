@@ -1,5 +1,8 @@
 package thesis.context.controller;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -19,6 +22,8 @@ public class Consumer  {
     //logic to consume the kafka
     // all the method for the data will be utilised here
 
+    @Autowired
+    private SimpMessagingTemplate template;
     public KafkaConsumer<String, PointCloud> createConsumer() {
         Properties properties = new Properties();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.221.213:9092");
@@ -41,7 +46,8 @@ public class Consumer  {
                     for (ConsumerRecord<String, PointCloud> record : records) {
                         PointCloud lidarData = record.value();
                         System.out.println(lidarData.getPoints());
-                        return lidarData;
+                        // Send the data to all subscribed clients
+                        this.template.convertAndSend("/topic/lidar", lidarData);
                     }
 
                 }
